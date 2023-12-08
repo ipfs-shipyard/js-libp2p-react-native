@@ -1,0 +1,28 @@
+{
+  "name": "js-libp2p-react-native",
+  "version": "1.0.0",
+  "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web"
+  },
+  "dependencies": {
+    "@chainsafe/libp2p-noise": "^14.0.0",
+    "@chainsafe/libp2p-yamux": "^6.0.1",
+    "@libp2p/websockets": "^8.0.6",
+    "event-target-shim": "^6.0.2",
+    "expo": "~49.0.15",
+    "expo-status-bar": "~1.6.0",
+    "libp2p": "^1.0.9",
+    "react": "18.2.0",
+    "react-native": "0.72.6",
+    "react-native-get-random-values": "^1.10.0",
+    "text-encoding": "^0.7.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.0"
+  },
+  "private": true
+}
