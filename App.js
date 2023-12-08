@@ -9,7 +9,6 @@ export default function App () {
   useEffect(() => {
      async function getLibp2p() {
         const node = await createLibp2p()
-        console.info('loaded libp2p', node.peerId)
         setLibp2p(node)
      }
      getLibp2p()
