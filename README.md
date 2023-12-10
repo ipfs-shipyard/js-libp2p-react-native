@@ -125,7 +125,7 @@ $ npx expo run:ios
 - By default this demo uses pure-js crypto - it's not efficient enough to run on an actual device, `crypto-browserify` should be replaced with `react-native-quick-crypto` in `bable.config.js` for native builds
 - `@libp2p/webrtc` can also only run on a device since it needs native code
 
-### Debugging
+### Debugging
 
 Put this at the top of your app file:
 
