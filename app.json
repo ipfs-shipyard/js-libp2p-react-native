@@ -15,7 +15,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "io.libp2p.js-libp2p-react-native"
     },
     "android": {
       "adaptiveIcon": {

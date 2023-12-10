@@ -10,10 +10,10 @@ import { noise } from '@chainsafe/libp2p-noise'
 import { yamux } from '@chainsafe/libp2p-yamux'
 import { identify } from '@libp2p/identify'
 import { circuitRelayTransport } from '@libp2p/circuit-relay-v2'
-import { kadDHT } from '@libp2p/kad-dht'
+import * as filters from '@libp2p/websockets/filters'
 import debug from 'debug'
 
-debug.enable('libp2p:circuit-relay:*')
+debug.enable('libp2p:*,*:trace')
 
 export default function App () {
   const [libp2p, setLibp2p] = useState(null)
@@ -24,9 +24,11 @@ export default function App () {
      async function getLibp2p() {
         const node = await createLibp2p({
           transports: [
-            webSockets(),
             circuitRelayTransport({
               discoverRelays: 1
+            }),
+            webSockets({
+              filter: filters.all
             })
           ],
           connectionEncryption: [
@@ -42,13 +44,13 @@ export default function App () {
                 '/dnsaddr/bootstrap.libp2p.io/p2p/QmQCU2EcMqAqQPR2i9bChDtGNJchTbq5TbXJJ16u19uLTa',
                 '/dnsaddr/bootstrap.libp2p.io/p2p/QmbLHAnMoJPWSCR5Zhtx6BHJX9KiKNN6tpvbUcqanj75Nb',
                 '/dnsaddr/bootstrap.libp2p.io/p2p/QmcZf59bWwK5XFi76CZX8cbJ4BhTzzA3gU1ZjYZcYW3dwt',
-                '/ip4/104.131.131.82/tcp/4001/p2p/QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvuJ'
+                '/ip4/104.131.131.82/tcp/4001/p2p/QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvuJ',
+                '/ip4/127.0.0.1/tcp/54383/ws/p2p/12D3KooWPjB7XzTv1hviVwPtx4qzr864NeFGDT6aFBDVD76fAMpK'
               ]
             })
           ],
           services: {
-            identify: identify(),
-            kadDHT: kadDHT()
+            identify: identify()
           }
         })
 

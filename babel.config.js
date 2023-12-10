@@ -14,7 +14,8 @@ module.exports = function (api) {
           'stream': 'stream-browserify',
           'node:stream': 'stream-browserify'
         }
-      }]
+      }],
+      ['@babel/plugin-transform-private-methods', { loose: true }]
     ]
   }
 }
