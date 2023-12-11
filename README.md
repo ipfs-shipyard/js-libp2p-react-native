@@ -86,16 +86,9 @@ module.exports = {
 
 ## Running
 
-### Prequisites
+### Prerequisites
 
-#### iOS
-
-1. Install XCode
-2. Install iOS (XCode > Settings > Platforms > Install the latest iOS version)
-
-#### Android
-
-1. ???
+Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
 
 ### Run in the simulator
 

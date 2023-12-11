@@ -22,7 +22,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "io.libp2p.jslibp2preactnative"
     },
     "web": {
       "favicon": "./assets/favicon.png"
