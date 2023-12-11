@@ -106,11 +106,13 @@ Follow the instructions - press `i` to start iOS or `a` for Android.
 See the [expo docs](https://docs.expo.dev/guides/local-app-development/)
 
 ```console
-$ npx expo run:android
+$ npx expo run:android --device
 ```
 
+For iOS you will need to provision a device certificate as normal.
+
 ```console
-$ npx expo run:ios
+$ npx expo run:ios --device
 ```
 
 ## Notes
