@@ -10,7 +10,6 @@ import { noise } from '@chainsafe/libp2p-noise'
 import { yamux } from '@chainsafe/libp2p-yamux'
 import { identify } from '@libp2p/identify'
 import { circuitRelayTransport } from '@libp2p/circuit-relay-v2'
-//import { tcp } from '@libp2p/tcp'
 import * as filters from '@libp2p/websockets/filters'
 import debug from 'debug'
 
@@ -30,8 +29,7 @@ export default function App () {
             }),
             webSockets({
               filter: filters.all
-            }),
-            //tcp()
+            })
           ],
           connectionEncryption: [
             noise()
