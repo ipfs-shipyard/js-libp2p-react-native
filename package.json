@@ -20,7 +20,7 @@
     "@libp2p/tcp": "^9.0.7",
     "@libp2p/webrtc": "^4.0.10",
     "@libp2p/websockets": "^8.0.7",
-    "@peculiar/webcrypto": "^1.4.3",
+    "@peculiar/webcrypto": "^1.4.4",
     "crypto-browserify": "^3.12.0",
     "event-target-shim": "^6.0.2",
     "events": "^3.3.0",

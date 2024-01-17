@@ -26,6 +26,7 @@ import 'weakmap-polyfill'
 import { TextEncoder, TextDecoder } from 'text-encoding'
 import { EventTarget, Event } from 'event-target-shim'
 import { Buffer } from '@craftzdog/react-native-buffer'
+import { Crypto } from '@peculiar/webcrypto'
 
 global.TextEncoder = TextEncoder
 global.TextDecoder = TextDecoder
@@ -39,32 +40,8 @@ global.AbortSignal.timeout = (ms) => {
   }, ms)
 }
 global.Buffer = Buffer
-```
-
-3. WebCrypto
-
-It's necessary to shim support for [SubtleCrypto](https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto)
-until it's added to react-native by default.
-
-First install the necessary dependencies:
-
-```console
-$ npm i @peculiar/webcrypto
-```
-
-..and create a shim file:
-
-```js
-// globals-crypto.js - this should be imported at the top of your App.js file
-// but AFTER globals.js
-import { Crypto } from '@peculiar/webcrypto'
-
 global.crypto.subtle = new Crypto().subtle
 ```
-
-IMPORTANT: until [PeculiarVentures/webcrypto#67](https://github.com/PeculiarVentures/webcrypto/pull/67) is
-merged, SubtleCrypto has to be shimmed *after* the node Buffer polyfill has
-been added to the global context.
 
 3. Enable modern JS features
 
@@ -117,7 +94,7 @@ $ npx expo run:ios --device
 
 ## Notes
 
-- By default this demo uses pure-js crypto - it's not efficient enough to run on an actual device, `crypto-browserify` should be replaced with `react-native-quick-crypto` in `bable.config.js` for native builds
+- By default this demo uses pure-js crypto - it's not efficient enough to run on an actual device, `crypto-browserify` should be replaced with `react-native-quick-crypto` in `babel.config.js` for native builds
 - `@libp2p/webrtc` can also only run on a device since it needs native code
 
 ### Debugging
