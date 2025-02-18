@@ -24,16 +24,19 @@ export default function App () {
   useEffect(() => {
      async function getLibp2p() {
         const node = await createLibp2p({
+          addresses: {
+            listen: [
+              '/p2p-circuit'
+            ]
+          },
           transports: [
-            circuitRelayTransport({
-              discoverRelays: 1
-            }),
+            circuitRelayTransport(),
             webSockets({
               filter: filters.all
             }),
             tcp()
           ],
-          connectionEncryption: [
+          connectionEncrypters: [
             noise()
           ],
           streamMuxers: [

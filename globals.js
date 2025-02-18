@@ -21,6 +21,7 @@ global.Event = Event
  * CustomEvent is a standard event but it's not supported by react-native
  *
  * Ref: https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent
+ * Ref: https://github.com/facebook/react-native/issues/38004
  */
 class CustomEventPolyfill extends Event {
   constructor (message, data) {
