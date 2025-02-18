@@ -17,6 +17,21 @@ global.TextDecoder = TextDecoder
 global.EventTarget = EventTarget
 global.Event = Event
 
+/**
+ * CustomEvent is a standard event but it's not supported by react-native
+ *
+ * Ref: https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent
+ */
+class CustomEventPolyfill extends Event {
+  constructor (message, data) {
+    super(message, data)
+
+    this.detail = data?.detail
+  }
+}
+
+global.CustomEvent = CustomEventPolyfill
+
 global.AbortSignal.timeout = (ms) => {
   const controller = new AbortController()
   setTimeout(() => {

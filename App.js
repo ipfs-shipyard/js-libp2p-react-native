@@ -56,11 +56,11 @@ export default function App () {
         })
 
         setInterval(() => {
-          setPeers(libp2p.getPeers())
-          setMultiaddrs(libp2p.getMultiaddrs())
+          setPeers(node?.getPeers())
+          setMultiaddrs(node?.getMultiaddrs())
         }, 1000)
 
-        setLibp2p(libp2p)
+        setLibp2p(node)
      }
      getLibp2p()
   }, [])
