@@ -12,8 +12,15 @@ import { Buffer } from '@craftzdog/react-native-buffer'
 import { Crypto } from '@peculiar/webcrypto'
 import { toString as uint8ArrayToString } from 'uint8arrays/to-string'
 
-global.EventTarget = EventTarget
-global.Event = Event
+/**
+ * Ref: https://developer.mozilla.org/en-US/docs/Web/API/EventTarget
+ */
+global.EventTarget = global.EventTarget ?? EventTarget
+
+/**
+ * Ref: https://developer.mozilla.org/en-US/docs/Web/API/Event
+ */
+global.Event = global.Event ?? Event
 
 /**
  * CustomEvent is a standard event but it's not supported by react-native
@@ -21,7 +28,7 @@ global.Event = Event
  * Ref: https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent
  * Ref: https://github.com/facebook/react-native/issues/38004
  */
-class CustomEventPolyfill extends Event {
+global.CustomEvent = global.CustomEvent ?? class CustomEventPolyfill extends Event {
   constructor (message, data) {
     super(message, data)
 
@@ -29,21 +36,34 @@ class CustomEventPolyfill extends Event {
   }
 }
 
-global.CustomEvent = global.CustomEvent ?? CustomEventPolyfill
-
+/**
+ * Ref: https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal/timeout_static
+ */
 global.AbortSignal.timeout = global.AbortSignal.timeout ?? ((ms) => {
   const controller = new AbortController()
   setTimeout(() => {
     controller.abort(new Error('Aborted'))
   }, ms)
 })
+
+/**
+ * Ref: https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal/throwIfAborted
+ */
 global.AbortSignal.prototype.throwIfAborted = global.AbortSignal.prototype.throwIfAborted ?? (() => {
   if (this.aborted) {
     throw new Error('Aborted')
   }
 })
 
+/**
+ * Some older Node.js modules use `Buffer` from the global scope instead of
+ * importing it from `node:buffer`.
+ */
 global.Buffer = global.Buffer ?? Buffer
+
+/**
+ * Ref: https://developer.mozilla.org/en-US/docs/Web/API/Crypto
+ */
 global.crypto = global.crypto ?? {}
 global.crypto.subtle = global.crypto.subtle ?? new Crypto().subtle
 
@@ -68,8 +88,19 @@ global.Promise.withResolvers = global.Promise.withResolvers ?? (() => {
   }
 })
 
-// this is not necessary for your app to run, but it helps when tracking down
-// broken polyfill modules
+/**
+ * Sometimes this is undefined, though perhaps only in the simulator
+ *
+ * Ref: https://github.com/craftzdog/react-native-quick-base64/issues/25
+ */
+global.base64FromArrayBuffer = global.base64FromArrayBuffer ?? ((buf) => {
+  return uint8ArrayToString(new Uint8Array(buf, 0, buf.byteLength), 'base64')
+})
+
+/**
+ * this is not necessary for your app to run, but it helps when tracking down
+ * broken polyfill modules
+ */
 if (global.__fbBatchedBridge) {
   const origMessageQueue = global.__fbBatchedBridge;
   const modules = origMessageQueue._remoteModuleTable;
@@ -78,9 +109,3 @@ if (global.__fbBatchedBridge) {
     console.log(`The problematic line code is in: ${modules[moduleId]}.${methods[moduleId][methodId]}`)
   }
 }
-
-// sometimes this is undefined, though perhaps only in the simulator
-// ref: https://github.com/craftzdog/react-native-quick-base64/issues/25
-global.base64FromArrayBuffer = global.base64FromArrayBuffer ?? ((buf) => {
-  return uint8ArrayToString(new Uint8Array(buf, 0, buf.byteLength), 'base64')
-})
