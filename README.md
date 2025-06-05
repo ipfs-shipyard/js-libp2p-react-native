@@ -2,48 +2,13 @@
 
 There is some setup that needs to be done to modernise the react-native runtime.
 
-1. Turn on [exports map support](https://reactnative.dev/blog/2023/06/21/package-exports-support)
-
-```js
-// metro.config.js
-module.exports = {
-  resolver: {
-    unstable_enablePackageExports: true,
-  }
-}
-```
-
-2. Shimming globals
+1. Shimming globals
 
 Some standard JS APIs aren't available in React Native, these need to be polyfilled, hopefully [not forever](https://github.com/facebook/hermes/discussions/1072).
 
-```js
-// globals.js - this should be imported at the top of your App.js file
-import '@azure/core-asynciterator-polyfill'
-import 'react-native-url-polyfill/auto'
-import 'react-native-get-random-values'
-import 'weakmap-polyfill'
-import { TextEncoder, TextDecoder } from 'text-encoding'
-import { EventTarget, Event } from 'event-target-shim'
-import { Buffer } from '@craftzdog/react-native-buffer'
-import { Crypto } from '@peculiar/webcrypto'
+See [./globals.js](./globals.js) for the changes you need to make.
 
-global.TextEncoder = TextEncoder
-global.TextDecoder = TextDecoder
-global.EventTarget = EventTarget
-global.Event = Event
-
-global.AbortSignal.timeout = (ms) => {
-  const controller = new AbortController()
-  setTimeout(() => {
-    controller.abort(new Error('Aborted'))
-  }, ms)
-}
-global.Buffer = Buffer
-global.crypto.subtle = new Crypto().subtle
-```
-
-3. Enable modern JS features
+2. Enable modern JS features
 
 - libp2p uses [ES2022 private properties](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/Private_properties) in some places, so enable transpiling them for use with React Native. At the time of writing [loose mode](https://2ality.com/2015/12/babel6-loose-mode.html) is also required.
 
@@ -60,6 +25,12 @@ module.exports = {
   ]
 }
 ```
+
+3. Add support for missing Node.js APIs
+
+Some dependencies use Node.js APIs so these need to be added to the module resolver.
+
+See [./babel-config.js](./babel-config.js) for the changes you need to make.
 
 ## Running
 
@@ -94,15 +65,14 @@ $ npx expo run:ios --device
 
 ## Notes
 
-- By default this demo uses pure-js crypto - it's not efficient enough to run on an actual device, `crypto-browserify` should be replaced with `react-native-quick-crypto` in `babel.config.js` for native builds
-- `@libp2p/webrtc` can also only run on a device since it needs native code
+- `@libp2p/webrtc` can only run on a device since it needs native code
 
 ### Debugging
 
 Put this at the top of your app file:
 
 ```js
-import debug from 'debug'
+import debug from 'weald'
 
 debug.enable('libp2p:*')
 ```
