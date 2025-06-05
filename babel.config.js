@@ -8,10 +8,10 @@ module.exports = function (api) {
     plugins: [
       ['module-resolver', {
         alias: {
+          'buffer': '@craftzdog/react-native-buffer',
+          'node:buffer': '@craftzdog/react-native-buffer',
           'crypto': 'react-native-quick-crypto',
           'node:crypto': 'react-native-quick-crypto',
-          //'crypto': 'crypto-browserify',
-          //'node:crypto': 'crypto-browserify',
           'stream': 'stream-browserify',
           'node:stream': 'stream-browserify',
           'net': 'react-native-tcp-socket',

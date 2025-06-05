@@ -11,10 +11,10 @@ import { identify } from '@libp2p/identify'
 import { circuitRelayTransport } from '@libp2p/circuit-relay-v2'
 import { tcp } from '@libp2p/tcp'
 import { kadDHT } from '@libp2p/kad-dht'
-import * as filters from '@libp2p/websockets/filters'
-import debug from 'debug'
+import { ping } from '@libp2p/ping'
+import debug from 'weald'
 
-debug.enable('libp2p:*,*:trace')
+debug.enable('libp2p:*')
 
 export default function App () {
   const [libp2p, setLibp2p] = useState(null)
@@ -31,9 +31,7 @@ export default function App () {
           },
           transports: [
             circuitRelayTransport(),
-            webSockets({
-              filter: filters.all
-            }),
+            webSockets(),
             tcp()
           ],
           connectionEncrypters: [
@@ -54,7 +52,8 @@ export default function App () {
           ],
           services: {
             identify: identify(),
-            kadDHT: kadDHT()
+            kadDHT: kadDHT(),
+            ping: ping()
           }
         })
 

@@ -7,13 +7,11 @@ global.process.version = 'v20.12.2'
 import '@azure/core-asynciterator-polyfill'
 import 'react-native-get-random-values'
 import 'weakmap-polyfill'
-import { TextEncoder, TextDecoder } from 'text-encoding'
 import { EventTarget, Event } from 'event-target-shim'
 import { Buffer } from '@craftzdog/react-native-buffer'
 import { Crypto } from '@peculiar/webcrypto'
+import { toString as uint8ArrayToString } from 'uint8arrays/to-string'
 
-global.TextEncoder = TextEncoder
-global.TextDecoder = TextDecoder
 global.EventTarget = EventTarget
 global.Event = Event
 
@@ -48,8 +46,29 @@ global.AbortSignal.prototype.throwIfAborted = () => {
 global.Buffer = Buffer
 global.crypto.subtle = new Crypto().subtle
 
-// this is not necessary for your app to run, but it helps when
-// tracking down broken polyfill modules
+/**
+ * Polyfill missing ES2024 promise methods
+ *
+ * Ref: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/withResolvers
+ */
+global.Promise.withResolvers = global.Promise.withResolvers ?? (() => {
+  let res
+  let rej
+
+  const p = new Promise((resolve, reject) => {
+    res = resolve
+    rej = reject
+  })
+
+  return {
+    promise: p,
+    resolve: res,
+    reject: rej
+  }
+})
+
+// this is not necessary for your app to run, but it helps when tracking down
+// broken polyfill modules
 if (global.__fbBatchedBridge) {
   const origMessageQueue = global.__fbBatchedBridge;
   const modules = origMessageQueue._remoteModuleTable;
@@ -58,3 +77,9 @@ if (global.__fbBatchedBridge) {
     console.log(`The problematic line code is in: ${modules[moduleId]}.${methods[moduleId][methodId]}`)
   }
 }
+
+// sometimes this is undefined, though perhaps only in the simulator
+// ref: https://github.com/craftzdog/react-native-quick-base64/issues/25
+global.base64FromArrayBuffer = global.base64FromArrayBuffer ?? ((buf) => {
+  return uint8ArrayToString(new Uint8Array(buf, 0, buf.byteLength), 'base64')
+})
