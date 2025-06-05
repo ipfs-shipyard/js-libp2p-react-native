@@ -29,22 +29,23 @@ class CustomEventPolyfill extends Event {
   }
 }
 
-global.CustomEvent = CustomEventPolyfill
+global.CustomEvent = global.CustomEvent ?? CustomEventPolyfill
 
-global.AbortSignal.timeout = (ms) => {
+global.AbortSignal.timeout = global.AbortSignal.timeout ?? ((ms) => {
   const controller = new AbortController()
   setTimeout(() => {
     controller.abort(new Error('Aborted'))
   }, ms)
-}
-global.AbortSignal.prototype.throwIfAborted = () => {
+})
+global.AbortSignal.prototype.throwIfAborted = global.AbortSignal.prototype.throwIfAborted ?? (() => {
   if (this.aborted) {
     throw new Error('Aborted')
   }
-}
+})
 
-global.Buffer = Buffer
-global.crypto.subtle = new Crypto().subtle
+global.Buffer = global.Buffer ?? Buffer
+global.crypto = global.crypto ?? {}
+global.crypto.subtle = global.crypto.subtle ?? new Crypto().subtle
 
 /**
  * Polyfill missing ES2024 promise methods
